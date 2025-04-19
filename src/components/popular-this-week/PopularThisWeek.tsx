@@ -1,15 +1,10 @@
-import { MovieCard } from "./MovieCard";
-import { Badge } from "./ui/badge";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "./ui/carousel";
+import { Movie } from "@/App";
+import GridView from "./GridView";
+import CarouselView from "./CarouselView";
+import useIsMobile from "@/hooks/useIsMobile";
 
 // List of popular movies
-const popular_this_week = [
+const popular: Movie[] = [
   {
     Title: "Snow White",
     Year: "2025",
@@ -53,44 +48,17 @@ const popular_this_week = [
 ];
 
 const PopularThisWeek = () => {
+  const isMobileView = useIsMobile();
   return (
     <div className="flex flex-col items-center p-4 w-full">
       <h2 className="text-center text-3xl text-[#f5c518] font-bold">
         Popular this week
       </h2>
-      <div className="hidden w-fit mt-4 py-1 gap-4 sm:grid grid-cols-1 sm:grid-cols-2 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
-        {popular_this_week.map((movie, index) => (
-          <MovieCard key={movie.imdbID} movie={movie}>
-            <Badge variant="secondary" className="text-[10px] capitalize">
-              {index + 1}
-            </Badge>
-          </MovieCard>
-        ))}
-      </div>
-      <div className="sm:hidden w-full flex justify-center mt-4">
-        <Carousel
-          opts={{
-            align: "start",
-            loop: true,
-          }}
-          className="w-full max-w-[250px]"
-        >
-          <CarouselContent className="-ml-1">
-            {popular_this_week.map((movie) => (
-              <CarouselItem
-                key={movie.imdbID}
-                className="pl-1 md:basis-1/2 lg:basis-1/3"
-              >
-                <div className="p-1 flex justify-center">
-                  <MovieCard movie={movie} />
-                </div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
-        </Carousel>
-      </div>
+      {isMobileView ? (
+        <CarouselView movies={popular} />
+      ) : (
+        <GridView movies={popular} />
+      )}
     </div>
   );
 };

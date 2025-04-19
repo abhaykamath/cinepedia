@@ -1,17 +1,19 @@
-import { ThemeProvider } from "@/components/theme-provider";
-import { ReactNode, useCallback, useState } from "react";
+import { ThemeProvider } from "@/contexts/theme-provider";
+import { lazy, ReactNode, Suspense, useCallback, useState } from "react";
 import { Navbar } from "./components/Navbar";
 import Footer from "./components/Footer";
-import PopularThisWeek from "./components/PopularThisWeek";
-import SearchResults from "./components/SearchResults";
+import PopularThisWeek from "./components/popular-this-week/PopularThisWeek";
 import Loader from "./components/Loader";
 
+// Lazy imports
+const SearchResults = lazy(() => import("./components/SearchResults"));
 export interface Movie {
   Title: string;
   Year: string;
   imdbID: string;
   Type: string;
   Poster: string;
+  Bookmarked?: boolean;
 }
 
 export interface MovieCardProps {
@@ -30,17 +32,27 @@ const App = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [searchLoading, setSearchLoading] = useState(false);
 
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setInput(e.target.value);
-      setQuery(e.target.value);
-    },
-    []
-  );
+  const handleInputChange = useCallback((e: string) => {
+    setInput(e);
+  }, []);
+
+  function saveSearchQuery(item: string) {
+    const prev_searches = localStorage.getItem("cinepedia_searches");
+    if (prev_searches) {
+      let list: string[] = JSON.parse(prev_searches);
+      if (!list.includes(item)) list = [item, ...list];
+      console.log(list);
+      if (list.length > 10) list.pop();
+      localStorage.setItem("cinepedia_searches", JSON.stringify(list));
+      return;
+    }
+    localStorage.setItem("cinepedia_searches", JSON.stringify([item]));
+  }
 
   // Query by Search
   async function queryBySearch(searchString: string): Promise<void> {
     setInput("");
+    setQuery(searchString);
     setSearchLoading(true);
     const response = await fetch(
       `https://www.omdbapi.com/?apikey=76f27438&s=${searchString}&page=1`
@@ -48,6 +60,7 @@ const App = () => {
     const movieList = await response.json();
     setMovies(movieList.Search);
     setSearchLoading(false);
+    saveSearchQuery(searchString);
   }
 
   // Query by Title
@@ -64,7 +77,9 @@ const App = () => {
           {/* Searched result */}
           {searchLoading && <Loader />}
           {!searchLoading && movies.length ? (
-            <SearchResults query={query} movies={movies} />
+            <Suspense fallback={<Loader />}>
+              <SearchResults query={query} movies={movies} />
+            </Suspense>
           ) : null}
 
           {/* Popular this week */}

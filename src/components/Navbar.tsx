@@ -1,14 +1,13 @@
-import { ModeToggle } from "@/components/mode-toggle";
+import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
-import { Input } from "./ui/input";
 import { Film, Search } from "lucide-react";
 import {
   SignedOut,
   SignInButton,
   SignedIn,
   UserButton,
-  useSession,
 } from "@clerk/clerk-react";
+import { Input } from "./ui/input";
 
 export function Navbar({
   input,
@@ -16,7 +15,7 @@ export function Navbar({
   queryBySearch,
 }: {
   input: string;
-  handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleInputChange: (e: string) => void;
   queryBySearch: any;
 }) {
   return (
@@ -29,9 +28,10 @@ export function Navbar({
         <Input
           value={input}
           placeholder="Search Cinepedia"
-          onChange={(e) => handleInputChange(e)}
+          onChange={(e) => handleInputChange(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter" && input.trim() !== "") {
+              e.preventDefault();
               queryBySearch(input);
             }
           }}
