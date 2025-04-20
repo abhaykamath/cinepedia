@@ -49,7 +49,7 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
                 setBookmarked((bookmarked) => !bookmarked);
               }}
             >
-              {bookmarked ? <BookmarkCheck /> : <Bookmark />}
+              {bookmarked ? <BookmarkCheck fill="#ffffff"/> : <Bookmark />}
             </div>
             {/* Like Icon - Feature */}
             <div

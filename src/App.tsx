@@ -4,6 +4,9 @@ import { Navbar } from "./components/Navbar";
 import Footer from "./components/Footer";
 import PopularThisWeek from "./components/popular-this-week/PopularThisWeek";
 import Loader from "./components/Loader";
+import { Route, Routes } from "react-router";
+import Bookmarks from "./pages/Bookmarks";
+import Home from "./pages/Home";
 
 // Lazy imports
 const SearchResults = lazy(() => import("./components/SearchResults"));
@@ -24,6 +27,12 @@ export interface MovieCardProps {
 export interface SearchResultsProps {
   query: string;
   movies: Movie[];
+}
+
+export interface HomeProps {
+  searchLoading: boolean;
+  movies: Movie[];
+  query: string;
 }
 
 const App = () => {
@@ -72,17 +81,21 @@ const App = () => {
           handleInputChange={handleInputChange}
           queryBySearch={queryBySearch}
         />
-        <main className="p-4 flex-1 flex flex-col items-center">
-          {/* Searched result */}
-          {searchLoading && <Loader />}
-          {!searchLoading && movies.length ? (
-            <Suspense fallback={<Loader />}>
-              <SearchResults query={query} movies={movies} />
-            </Suspense>
-          ) : null}
 
-          {/* Popular this week */}
-          <PopularThisWeek />
+        <main className="p-4 flex-1 flex flex-col items-center">
+          <Routes>
+            <Route
+              path="/"
+              element={
+                <Home
+                  searchLoading={searchLoading}
+                  movies={movies}
+                  query={query}
+                />
+              }
+            />
+            <Route path="/bookmarks" element={<Bookmarks />} />
+          </Routes>
         </main>
         <Footer />
       </div>

@@ -1,6 +1,6 @@
 import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
-import { Film, Search } from "lucide-react";
+import { ArrowBigLeft, Bookmark, Film, Search } from "lucide-react";
 import {
   SignedOut,
   SignInButton,
@@ -8,6 +8,7 @@ import {
   UserButton,
 } from "@clerk/clerk-react";
 import { Input } from "./ui/input";
+import { NavLink, useLocation } from "react-router";
 
 export function Navbar({
   input,
@@ -18,6 +19,7 @@ export function Navbar({
   handleInputChange: (e: string) => void;
   queryBySearch: any;
 }) {
+  const location = useLocation();
   return (
     <header className="w-full flex items-center justify-between px-4 py-3 border-b bg-background">
       {/* Logo */}
@@ -48,6 +50,26 @@ export function Navbar({
       {/* Right Side */}
       <div className="flex items-center gap-2">
         <ModeToggle />
+        {!location.pathname.includes("bookmarks") && (
+          <NavLink
+            to="/bookmarks"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <Button variant="outline" className="hover:cursor-pointer">
+              <Bookmark />
+            </Button>
+          </NavLink>
+        )}
+        {location.pathname.includes("bookmarks") && (
+          <NavLink
+            to="/"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            <Button variant="outline" className="hover:cursor-pointer">
+              <ArrowBigLeft />
+            </Button>
+          </NavLink>
+        )}
         <SignedOut>
           <SignInButton>
             <Button variant="outline">Sign In</Button>
