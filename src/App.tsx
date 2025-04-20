@@ -1,15 +1,11 @@
 import { ThemeProvider } from "@/contexts/theme-provider";
-import { lazy, ReactNode, Suspense, useCallback, useState } from "react";
+import { ReactNode, useCallback, useState } from "react";
 import { Navbar } from "./components/Navbar";
 import Footer from "./components/Footer";
-import PopularThisWeek from "./components/popular-this-week/PopularThisWeek";
-import Loader from "./components/Loader";
 import { Route, Routes } from "react-router";
 import Bookmarks from "./pages/Bookmarks";
 import Home from "./pages/Home";
 
-// Lazy imports
-const SearchResults = lazy(() => import("./components/SearchResults"));
 export interface Movie {
   Title: string;
   Year: string;
