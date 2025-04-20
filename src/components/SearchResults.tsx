@@ -1,19 +1,20 @@
 import { SearchResultsProps } from "@/App";
-import { MovieCard } from "./MovieCard";
 import Separator from "./Separator";
+import useIsMobile from "@/hooks/useIsMobile";
+import CarouselView from "./popular-this-week/CarouselView";
+import GridView from "./popular-this-week/GridView";
 
 const SearchResults = ({ query, movies }: SearchResultsProps) => {
+  const isMobileView = useIsMobile();
   return (
     <>
-      <div className="p-4">
-        <p>Search "{query}"</p>
-        <div className="flex flex-col gap-4 mt-4 sm:grid sm:grid-cols-2 sm:gap-5 md:grid-cols-3 lg:grid-cols-4 lg:gap-6">
-          {movies
-            ?.sort((a, b) => parseInt(b.Year) - parseInt(a.Year))
-            .map((movie) => {
-              return <MovieCard key={movie.imdbID} movie={movie} />;
-            })}
-        </div>
+      <div className="flex flex-col items-center p-4 pb-16 w-full">
+        <p className="w-full sm:max-w-lg md:max-w-3xl lg:max-w-5xl xl:max-w-7xl text-center sm:text-start">Search "{query}"</p>
+        {isMobileView ? (
+          <CarouselView movies={movies} />
+        ) : (
+          <GridView movies={movies} />
+        )}
       </div>
       {/* Separator */}
       <Separator />

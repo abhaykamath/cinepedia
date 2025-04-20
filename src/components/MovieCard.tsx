@@ -1,17 +1,23 @@
 import { MovieCardProps } from "@/App";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
-import { Bookmark, BookmarkCheck } from "lucide-react";
+import { Bookmark, BookmarkCheck, Heart } from "lucide-react";
 import { useState } from "react";
-import { isMovieBookmarked, toggleBookmark } from "@/utils/localStorage";
+import {
+  isMovieBookmarked,
+  isMovieLiked,
+  toggleBookmark,
+  toggleLike,
+} from "@/utils/localStorage";
 
 export const MovieCard = ({ movie }: MovieCardProps) => {
   const [bookmarked, setBookmarked] = useState(
     movie.Bookmarked || isMovieBookmarked(movie.imdbID)
   );
-  console.log("card rendered");
+  const [liked, setLiked] = useState(isMovieLiked(movie.imdbID) || false);
+
   return (
-    <Card className="w-[200px] shadow-md hover:shadow-lg transition-shadow p-0 gap-0">
+    <Card className="w-full shadow-md hover:shadow-lg transition-shadow p-0 gap-0">
       <img
         src={
           movie.Poster !== "N/A" ? movie.Poster : "https://placehold.co/200x300"
@@ -23,24 +29,43 @@ export const MovieCard = ({ movie }: MovieCardProps) => {
         }}
       />
       <CardContent className="p-3">
+        {/* Top row */}
         <div className="flex items-center justify-between text-xs text-muted-foreground">
-          <span>{movie.Year}</span>
-          <div className="flex gap-1">
+          {/* Left */}
+          <div className="flex items-center gap-2">
+            <span>{movie.Year}</span>
             <Badge variant="secondary" className="text-[10px] capitalize">
               {movie.Type}
             </Badge>
+          </div>
+
+          {/* Right */}
+          <div className="flex gap-1">
+            {/* Bookmark Icon - Feature */}
             <div
               onClick={(e) => {
                 e.stopPropagation();
-                toggleBookmark(movie.imdbID);
+                toggleBookmark(movie);
                 setBookmarked((bookmarked) => !bookmarked);
               }}
             >
               {bookmarked ? <BookmarkCheck /> : <Bookmark />}
             </div>
+            {/* Like Icon - Feature */}
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleLike(movie.imdbID);
+                setLiked((liked) => !liked);
+              }}
+            >
+              {liked ? <Heart fill="#cd486b" /> : <Heart />}
+            </div>
           </div>
         </div>
-        <h3 className="text-sm mt-1 font-semibold line-clamp-2">
+
+        {/* Bottom row */}
+        <h3 className="text-md mt-1 font-semibold line-clamp-2 select-none">
           {movie.Title}
         </h3>
       </CardContent>

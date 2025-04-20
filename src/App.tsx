@@ -41,7 +41,6 @@ const App = () => {
     if (prev_searches) {
       let list: string[] = JSON.parse(prev_searches);
       if (!list.includes(item)) list = [item, ...list];
-      console.log(list);
       if (list.length > 10) list.pop();
       localStorage.setItem("cinepedia_searches", JSON.stringify(list));
       return;

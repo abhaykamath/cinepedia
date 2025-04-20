@@ -50,8 +50,8 @@ const popular: Movie[] = [
 const PopularThisWeek = () => {
   const isMobileView = useIsMobile();
   return (
-    <div className="flex flex-col items-center p-4 w-full">
-      <h2 className="text-center text-3xl text-[#f5c518] font-bold">
+    <div className="flex flex-col gap-4 items-center p-4 pb-16 w-full">
+      <h2 className="w-full max-w-7xl text-center text-3xl text-[#f5c518] font-bold">
         Popular this week
       </h2>
       {isMobileView ? (
